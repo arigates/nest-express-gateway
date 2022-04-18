@@ -16,7 +16,7 @@ serviceEndpoints:
   products:
     url: 'http://localhost:5000'
   product_reviews:
-    url: 'http://127.0.0.1:6000'
+    url: 'http://localhost:6000'
 policies:
   - basic-auth
   - cors
