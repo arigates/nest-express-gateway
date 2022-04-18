@@ -1,0 +1,49 @@
+http:
+  port: 8080
+admin:
+  port: 9876
+  host: localhost
+apiEndpoints:
+  products:
+    host: localhost
+    paths: 
+      - '/products'
+  product_reviews:
+    host: localhost
+    paths: 
+      - '/products/*/reviews'
+serviceEndpoints:
+  products:
+    url: 'http://localhost:5000'
+  product_reviews:
+    url: 'http://127.0.0.1:6000'
+policies:
+  - basic-auth
+  - cors
+  - expression
+  - key-auth
+  - log
+  - oauth2
+  - proxy
+  - rate-limit
+pipelines:
+  productsPipeline:
+    apiEndpoints:
+      - products
+    policies:
+    # Uncomment `key-auth:` when instructed to in the Getting Started guide.
+    # - key-auth:
+      - proxy:
+          - action:
+              serviceEndpoint: products 
+              changeOrigin: true
+  productReviewsPipeline:
+    apiEndpoints:
+      - product_reviews
+    policies:
+    # Uncomment `key-auth:` when instructed to in the Getting Started guide.
+    # - key-auth:
+      - proxy:
+          - action:
+              serviceEndpoint: product_reviews 
+              changeOrigin: true
