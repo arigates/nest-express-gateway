@@ -1,0 +1,80 @@
+version: "3.7"
+
+services:
+  gateway:
+    container_name: nest-gateway
+    build:
+      context: nest-api-gateway
+      dockerfile: Dockerfile
+    ports:
+      - 8081:8080
+  product:
+    container_name: nest-product
+    build:
+      context: products-service
+      dockerfile: Dockerfile
+    environment:
+      DATABASE_HOST: nest-product-db
+      DATABASE_PORT: 5432
+      DATABASE_NAME: db_product
+      DATABASE_USERNAME: postgres
+      DATABASE_PASSWORD: postgres
+      RABBITMQ_HOST: rabbitmq
+    ports:
+      - 5000
+    restart: on-failure
+    depends_on:
+      - database
+      - rabbitmq
+  product-review:
+    container_name: nest-product-review
+    build:
+      context: product-reviews-service
+      dockerfile: Dockerfile
+    environment:
+      DATABASE_HOST: nest-product-review-db
+      DATABASE_PORT: 5432
+      DATABASE_NAME: db_product_review
+      DATABASE_USERNAME: postgres
+      DATABASE_PASSWORD: postgres
+      RABBITMQ_HOST: rabbitmq
+    ports:
+      - 6000
+    restart: on-failure
+    depends_on:
+      - database
+      - rabbitmq
+  rabbitmq:
+    image: rabbitmq:management
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    ports:
+      # AMQP protocol port
+      - 5672:5672
+      # HTTP management UI
+      - 15672:15672
+  database:
+    container_name: nest-product-db
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: db_product
+    image: postgres
+    ports:
+      - 5432:5432
+    volumes:
+      - dbdata:/var/lib/postgresql/data
+  database2:
+    container_name: nest-product-review-db
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: db_product_review
+    image: postgres
+    ports:
+      - 5433:5432
+    volumes:
+      - dbdata2:/var/lib/postgresql/data
+
+volumes:
+  dbdata:
+  dbdata2:
