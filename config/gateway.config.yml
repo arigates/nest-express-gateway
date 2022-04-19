@@ -1,22 +1,22 @@
 http:
-  port: 8080
+  port: ${PORT:-8080}
+  host: ${HOST:-localhost}
 admin:
   port: 9876
   host: localhost
 apiEndpoints:
   products:
-    host: localhost
     paths: 
       - '/products'
+      - '/products/*'
   product_reviews:
-    host: localhost
     paths: 
       - '/products/*/reviews'
 serviceEndpoints:
   products:
-    url: 'http://localhost:5000'
+    url: 'http://product:5000'
   product_reviews:
-    url: 'http://localhost:6000'
+    url: 'http://product-review:6000'
 policies:
   - basic-auth
   - cors
