@@ -8,10 +8,10 @@ apiEndpoints:
   products:
     paths: 
       - '/products'
-      - '/products/*'
+      - '/products/:id'
   product_reviews:
     paths: 
-      - '/products/*/reviews'
+      - '/products/:id/reviews'
 serviceEndpoints:
   products:
     url: 'http://product:5000'
